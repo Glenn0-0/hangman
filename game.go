@@ -96,13 +96,13 @@ func makeGuess(hidWord, word string) {
 
 	guess := askLetter(word)
 
-	if guess == "guess" {
+	if guess == "GUESS" {
 		guessWord(guess, word)
 		makeGuess(hidWord, word)
 	}
 
 	if !strings.Contains(word, guess) {
-		decrementLives()
+		decrementLives(word)
 		makeGuess(hidWord, word)
 	}
 
@@ -115,7 +115,7 @@ func makeGuess(hidWord, word string) {
 
 	if !strings.Contains(hidWord, "_") {
 		fmt.Println("Word revealed!!")
-		fmt.Println(word)
+		fmt.Println("---------", word, "---------")
 		finishGame(1)
 	}
 
@@ -136,6 +136,7 @@ func askLetter(word string) string {
 	fmt.Scanln(&letter)
 
 	letter = strings.ToUpper(letter)
+	fmt.Println("Your guess: ", letter)
 
 	if letter == "EXIT" {
 		exitGame(1)
@@ -155,17 +156,26 @@ func askLetter(word string) string {
 }
 
 func guessWord(guess, word string) {
-	if guess == word {
+	var guessWord string
+	fmt.Println("You've chosen to guess the word right away. Brave enough!")
+	fmt.Println("Please, enter your guess:")
+
+	fmt.Scanln(&guessWord)
+
+	if strings.ToUpper(guessWord) == word {
 		finishGame(1)
 	}
-	decrementLives()
+
+	decrementLives(word)
 }
 
-func decrementLives() {
+func decrementLives(word string) {
 	fmt.Println("Oh-oh. Incorrect. I'm taking away one of your lives!")
 	lives--
 
 	if lives < 1 {
+		fmt.Println("Oh... You lost!")
+		fmt.Println("The word was ", word)
 		finishGame(0)
 	}
 }
@@ -174,7 +184,7 @@ func finishGame(res int) {
 	switch res {
 	case 0:
 		fmt.Println(visualLives[lives])
-		fmt.Println("What a pity! You lost... You were so close!")
+		fmt.Println("You were so close!")
 		askToPlayAgain()
 	case 1:
 		fmt.Println("YAY!! You won!")
