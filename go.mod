@@ -3,6 +3,7 @@ module github.com/Glenn0-0/hangman.git
 go 1.18
 
 require (
+	github.com/TwiN/go-color v1.1.0 // indirect
 	github.com/briandowns/spinner v1.19.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.2 // indirect
