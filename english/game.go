@@ -93,7 +93,7 @@ func startGuessing(word string) int {
 	return 0
 }
 
-// guessing until user reveales the word or loses.
+// guessing until user reveals the word or loses.
 func makeGuess(hidWord, word string) {
 	time.Sleep(time.Second)
 	printCurrent(hidWord)
@@ -107,7 +107,7 @@ func makeGuess(hidWord, word string) {
 		makeGuess(hidWord, word)
 	}
 
-	// chosen letter is incorrect. Substracting 1 from lives.
+	// chosen letter is incorrect. Subtracting 1 from lives.
 	if !strings.Contains(word, guess) {
 		decrementLives(word)
 		makeGuess(hidWord, word)
@@ -124,27 +124,12 @@ func makeGuess(hidWord, word string) {
 
 	// if no hidden letters left -> win. 
 	if !strings.Contains(hidWord, "_") {
-		fmt.Println(color.Ize(color.Green, "Word revealed!!"))
-		fmt.Println("---------", word, "---------")
+		wordRevealed(word)
 		finishGame(1)
 	}
 
 	// nolint: go-staticcheck
 	makeGuess(hidWord, word) // has to be infinite.
-}
-
-// prints current lives count and an image.
-func printCurrent(hiddenWord string) {
-	fmt.Println()
-
-	loadAnimation.Start()
-	time.Sleep(2 * time.Second)
-	loadAnimation.Stop()
-
-	fmt.Printf("Currently you have %v lives left.\n", lives)
-	fmt.Println(color.Ize(color.Yellow, visualLives[lives]))
-	fmt.Println(color.Ize(color.Cyan, hiddenWord))
-	fmt.Println()
 }
 
 // asks for a letter (or key word "guess"/"exit") from a user to guess.
@@ -166,10 +151,9 @@ func askLetter(word string) string {
 		return letter
 	}
 
-	// not 1 character was typed; character isn't valid (only english leters are).
+	// not 1 character was typed; character isn't valid (only english letters are).
 	if len(letter) > 1 || len(letter) < 1 || !strings.Contains(alphabet, letter) {
-		fmt.Println(color.Ize(color.Purple, "Oh... Looks like you've entered an invalid letter."))
-		fmt.Println("Please, try again.")
+		invalidLetter()
 		askLetter(word)
 	}
 	
@@ -186,8 +170,7 @@ func guessWord(guess, word string) {
 	time.Sleep(2 * time.Second)
 	loadAnimation.Stop()
 
-	fmt.Println("You've chosen to guess the word right away. Brave enough!")
-	fmt.Println(color.Ize(color.Green, "Please, enter your guess:"))
+	offerToGuess()
 
 	fmt.Scanln(&guessWord)
 
@@ -206,8 +189,7 @@ func decrementLives(word string) {
 
 	// if no lives left - game lost.
 	if lives < 1 {
-		fmt.Println("Oh... You lost!")
-		fmt.Println("The word was ", color.Ize(color.Cyan, word))
+		printLoss(word)
 		finishGame(0) // 0 as code for a lose.
 	}
 }
@@ -216,20 +198,14 @@ func decrementLives(word string) {
 func finishGame(res int) {
 	switch res {
 	case 0:
-		fmt.Println()
-		fmt.Println("You were so close!")
-
 		askToPlayAgain()
 
 	case 1:
-		fmt.Println()
-		fmt.Println(color.Ize(color.Green, "YAY!! You won!"))
-		fmt.Println("Congratulations!")
-
+		printWin()
 		askToPlayAgain()
 
 	default:
-		log.Fatal("an undefined error occured while finishing the game...")
+		log.Fatal("an undefined error occurred while finishing the game...")
 		
 	}
 }
