@@ -6,8 +6,6 @@ import (
 	"os"
 	"strings"
 	"time"
-
-	"github.com/TwiN/go-color"
 )
 
 // ask to play for the first time.
@@ -31,12 +29,7 @@ func askToPlay() {
 	default:
 		// re-asks since input was invalid.
 		loadAnimation.Stop()
-
-		fmt.Println(color.Ize(color.Red, "Oh-oh... It looks like you've chosen an invalid option!"))
-		fmt.Println(color.Ize(color.Yellow, "==== failed to start the game: invalid option ===="))
-		time.Sleep(time.Second)
-		fmt.Println("Please, try again...")
-
+		invalidOption()
 		askToPlay()
 	}
 }
@@ -60,12 +53,7 @@ func askToPlayAgain() {
 	default:
 		// re-asks to play since the input was invalid.
 		loadAnimation.Stop()
-
-		fmt.Println(color.Ize(color.Red, "Oh-oh... It looks like you've chosen an invalid option!"))
-		fmt.Println(color.Ize(color.Yellow, "==== failed to start the game: invalid option ===="))
-		time.Sleep(time.Second)
-		fmt.Println("Please, try again...")
-
+		invalidOption()
 		askToPlayAgain()
 	}
 }
@@ -75,24 +63,20 @@ func exitGame(played int) {
 	loadAnimation.Stop()
 
 	fmt.Println()
-	fmt.Println(color.Ize(color.Yellow, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"))
+	printMinPlusLine()
 
 	switch played {
 	case 0: // no games played
-		fmt.Println("OK. Hope you'll come back and play for once...")
-		time.Sleep(time.Second)
-		fmt.Println(color.Ize(color.Blue, "See you soon..."))
+		sadBye()
 		
 	case 1: // some games played
-		fmt.Println("OK. Hope you've enjoyed the time spent!")
-		time.Sleep(time.Second)
-		fmt.Println(color.Ize(color.Purple, "See you soon ~"))
+		happyBye()
 
 	default:
-		log.Fatal("an undefined error occured while exiting the game")
+		log.Fatal("an undefined error occurred while exiting the game")
 	}
 
-	fmt.Println(color.Ize(color.Yellow, "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"))
+	printMinPlusLine()
 	fmt.Println()	
 
 	// stops program execution.
